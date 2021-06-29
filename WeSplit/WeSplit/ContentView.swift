@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var checkAmount: String = ""
     @State private var numberOfPeople: Int = 2
     @State private var tipPercentage: Int = 2
+    @State private var ageReservation: String = ""
     
     let tipPercentages = [10, 15, 20, 0]
     
@@ -25,6 +26,15 @@ struct ContentView: View {
         let amountPerPerson = grandTotal / peopleCount
         
         return amountPerPerson
+    }
+    
+    var totalAmount: Double {
+        let tipSelection = Double(tipPercentages[tipPercentage])
+        let orderAmount = Double(checkAmount) ?? 0
+        
+        let tipValue = orderAmount / 100 * tipSelection
+        let grandTotal = orderAmount + tipValue
+        return grandTotal
     }
     
     var body: some View {
@@ -43,6 +53,9 @@ struct ContentView: View {
                             Text("\($0) people")
                         }
                     }
+                    
+                    TextField("Reservation Age:", text: $ageReservation)
+                        .keyboardType(.numberPad)
                 }
                 
                 Section(header: Text("How much tip do you want to leave?")) {
@@ -54,8 +67,12 @@ struct ContentView: View {
                     .pickerStyle(SegmentedPickerStyle())
                 }
                 
-                Section {
-                    Text("Total amount per person: \(totalAmountPerson, specifier: "%.2f") €")
+                Section(header: Text("Total amount:")) {
+                    Text("\(totalAmount, specifier: "%.2f") €")
+                }
+                
+                Section(header: Text("Total amount per person:")) {
+                    Text("\(totalAmountPerson, specifier: "%.2f") €")
                 }
             }
             .navigationTitle("WeSplit")
