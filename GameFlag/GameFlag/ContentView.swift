@@ -16,6 +16,9 @@ struct ContentView: View {
     
     @State private var showingScore = false
     @State private var scoreTitle = ""
+    @State private var userScore = 0
+    
+    let puntuation = (correct: 10, incorrect: 20)
     
     var body: some View {
         
@@ -49,12 +52,16 @@ struct ContentView: View {
                     
                 }
                 
+                Text("Your score is: \n \(userScore)")
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                
                 Spacer()
             }
 
         }
         .alert(isPresented: $showingScore, content: {
-            Alert(title: Text(scoreTitle), message: Text("Your score is ???"), dismissButton: .default(Text("Continue"), action: {
+            Alert(title: Text(scoreTitle), message: Text("Your score is \(userScore)"), dismissButton: .default(Text("Continue"), action: {
                 self.askQuestion()
             }))
         })
@@ -64,16 +71,26 @@ struct ContentView: View {
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
             scoreTitle = "Correct"
+            addScore()
+            askQuestion()
         } else {
             scoreTitle = "Wrong"
+            restScore()
+            showingScore = true
         }
-        
-        showingScore = true
     }
     
     func askQuestion() {
         countries = countries.shuffled()
         correctAnswer = Int.random(in: 0...2)
+    }
+    
+    func addScore() {
+        userScore = userScore + puntuation.correct
+    }
+    
+    func restScore() {
+        userScore = userScore - puntuation.correct
     }
 }
 
