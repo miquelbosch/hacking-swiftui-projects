@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct GameFlagApp: App {
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
